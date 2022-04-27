@@ -6,6 +6,46 @@ db = SQLAlchemy()
 
 
 # Replace this with your code!
+class User(db.Model):
+    __tablename___ = "users"
+
+    user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    email = db.Column(db.String, unique=True, nullable=False)
+    password = db.Column(db.String, nullable=False)
+    ratings = db.relationship("Rating", back_populates="user")
+    
+    def __repr__(self):
+        return f"<User user_id={self.user_id} email={self.email}>"
+
+
+class Movie(db.Model):
+    __tablename__ = "movies"
+
+    movie_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String, nullable=False)
+    overview = db.Column(db.Text)
+    release_date = db.Column(db.DateTime)
+    poster_path = db.Column(db.String)
+
+    ratings = db.relationship("Rating", back_populates="movie")
+    def __repr__(self):
+        return (f"<Movie movie_id={self.movie_id} title={self.title} overview={self.overview} release_date={self.release_date} poster_path={self.poster_path}>")
+
+class Rating(db.Model):
+    __tablename__ = "ratings"
+
+    rating_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    score = db.Column(db.Integer)
+    movie_id = db.Column(db.Integer, db.ForeignKey("movies.movie_id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
+    
+    movie = db.relationship("Movie", back_populates="ratings")
+    user = db.relationship("User", back_populates="ratings")
+
+
+    def __repr__(self):
+        return (f'<Rating rating_id={self.rating_id} score={self.score} movie_id={self.movie_id} user_id={self.user_id}>')
+
 
 
 def connect_to_db(flask_app, db_uri="postgresql:///ratings", echo=True):
