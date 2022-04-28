@@ -5,9 +5,9 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
-# Replace this with your code!
+
 class User(db.Model):
-    __tablename___ = "users"
+    __tablename__ = "users"
 
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String, unique=True, nullable=False)
@@ -28,6 +28,7 @@ class Movie(db.Model):
     poster_path = db.Column(db.String)
 
     ratings = db.relationship("Rating", back_populates="movie")
+
     def __repr__(self):
         return (f"<Movie movie_id={self.movie_id} title={self.title} overview={self.overview} release_date={self.release_date} poster_path={self.poster_path}>")
 
